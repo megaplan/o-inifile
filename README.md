@@ -1,7 +1,10 @@
-inifile [![Build Status](https://secure.travis-ci.org/TwP/inifile.png)](http://travis-ci.org/TwP/inifile)
+inifile
 =======
 
-This is a native Ruby package for reading and writing INI files.
+This is a native Ruby library for reading and writing INI files.
+
+This project is a fork of the [original inifile library](https://github.com/TwP/inifile).
+by Tim Pease (TwP).
 
 
 Description
@@ -212,7 +215,7 @@ License
 -------
 
 MIT License
-Copyright (c) 2006 - 2014
+Copyright (c) 2006 - 2021
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

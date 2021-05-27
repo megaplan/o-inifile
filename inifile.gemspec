@@ -4,14 +4,14 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'inifile'
 
 Gem::Specification.new do |spec|
-  spec.name          = "inifile"
+  spec.name          = "o-inifile"
   spec.version       = IniFile::VERSION
-  spec.authors       = ["Tim Pease"]
-  spec.email         = ["tim.pease@gmail.com"]
+  spec.authors       = ['Oleg Pudeyev', "Tim Pease"]
+  spec.email         = ['code@olegp.name', "tim.pease@gmail.com"]
   spec.summary       = %q{INI file reader and writer}
   spec.description   = %q{INI file reader and writer}
   spec.description   = %q{IniFile is a pure ruby gem that can read and write most INI file formats}
-  spec.homepage      = "https://rubygems.org/gems/inifile"
+  spec.homepage      = "https://github.com/p/o-inifile"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

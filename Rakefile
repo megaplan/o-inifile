@@ -12,11 +12,11 @@ task :default => 'test:run'
 task 'gem:release' => 'test:run'
 
 Bones {
-  name         'inifile'
+  name         'o-inifile'
   summary      'INI file reader and writer'
-  authors      'Tim Pease'
-  email        'tim.pease@gmail.com'
-  url          'http://rubygems.org/gems/inifile'
+  authors      'Oleg Pudeyev'
+  email        'code@olegp.name'
+  url          'https://github.com/p/o-inifile'
   version      IniFile::VERSION
 
   use_gmail
