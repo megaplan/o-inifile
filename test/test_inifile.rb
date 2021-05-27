@@ -557,13 +557,13 @@ class TestIniFile < Test::Unit::TestCase
     assert_equal 3, ini_file['section_one']['one']
     assert_equal 5, ini_file['section_five']['five']
   end
-  
+
   def test_integer_typecast
     ini_file = IniFile.load('test/data/typecast.ini')
     assert_equal 146, ini_file['section_one']['int1']
     assert_equal "00342", ini_file['section_one']['string1']
   end
-  
+
   def test_float_typecast
     ini_file = IniFile.load('test/data/typecast.ini')
     assert_equal 0.35, ini_file['section_one']['float1']
@@ -571,7 +571,19 @@ class TestIniFile < Test::Unit::TestCase
     assert_equal 234.646, ini_file['section_one']['float3']
     assert_equal "345.", ini_file['section_one']['string2']
   end
-  
-  
+
+  def test_switch_support_read
+    ini_file = IniFile.load('test/data/switch.ini')
+
+    assert_equal({}, ini_file['section_six']['switch_support'])
+  end
+
+  def test_switch_support_write
+    ini_file = IniFile.new(:filename => "test/data/tmp.ini")
+    ini_file["foo"] = {"switch_support" => {}}
+    ini_file.save
+
+    assert File.read("test/data/tmp.ini") =~ /^switch_support$/
+  end
 end
 
