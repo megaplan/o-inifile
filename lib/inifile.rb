@@ -54,6 +54,7 @@ class IniFile
   #   :permissions - Permission bits to assign the new file
   #   :continuation  - Use backslash as a line continuation
   #   :separator - what to output between the key, operator, and value
+  #   :force_array  - Keep all values with same key in an array
   #
   # Examples
   #
@@ -81,6 +82,7 @@ class IniFile
     @permissions = opts.fetch(:permissions, nil)
     @continuation  = opts.fetch(:continuation, true)
     @separator = opts.fetch(:separator, ' ')
+    @force_array = opts.fetch(:force_array, nil)
     content   = opts.fetch(:content, nil)
 
     @ini = Hash.new {|h,k| h[k] = Hash.new}
@@ -114,7 +116,13 @@ class IniFile
           if val.class == Hash and val.empty?
             f.puts param
           else
-            f.puts "#{param}#{@separator}#{@param}#{@separator}#{escape_value val}"
+            if !val.is_a?(Array) || !@force_array
+              f.puts "#{param}#{@separator}#{@param}#{@separator}#{escape_value val}"
+            else
+              val.each do |subval|
+                f.puts "#{param}#{@separator}#{@param}#{@separator}#{escape_value subval}"
+              end
+            end
           end
         }
         f.puts
@@ -419,7 +427,7 @@ class IniFile
   #
   # Returns this IniFile.
   def parse( content )
-    parser = Parser.new(@ini, @param, @comment, @default, @continuation)
+    parser = Parser.new(@ini, @param, @comment, @default, @continuation, @force_array)
     parser.parse(content)
     self
   end
@@ -443,10 +451,11 @@ class IniFile
     # default - The String name of the default global section
     # continuation - Use backslash as a line continuation character
     #
-    def initialize( hash, param, comment, default, continuation )
+    def initialize( hash, param, comment, default, continuation, force_array )
       @hash = hash
       @default = default
       @continuation = continuation
+      @force_array = force_array
 
       comment = comment.to_s.empty? ? "\\z" : "\\s*(?:[#{comment}].*)?\\z"
 
@@ -589,7 +598,13 @@ class IniFile
 
       self.value = $1 if value =~ %r/\A"(.*)(?<!\\)"\z/m
 
-      section[property] = typecast(value)
+      if section[property].nil? || !@force_array
+        section[property] = typecast(value)
+      elsif section[property].is_a?(Array)
+        section[property] << typecast(value)
+      else
+        section[property] = [section[property], typecast(value)]
+      end
 
       self.property = nil
       self.value = nil
