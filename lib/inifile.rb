@@ -16,7 +16,7 @@ class IniFile
   #            :parameter - String used to separate parameter and value
   #            :encoding  - Encoding String for reading / writing
   #            :default   - The String name of the default global section
-  #            :slash_lc  - Use backslash as a line contintuation
+  #            :continuation  - Use backslash as a line contintuation
   #
   # Examples
   #
@@ -52,7 +52,7 @@ class IniFile
   #   :default   - The String name of the default global section
   #   :filename  - The filename as a String
   #   :permissions - Permission bits to assign the new file
-  #   :slash_lc  - Use backslash as a line continuation
+  #   :continuation  - Use backslash as a line continuation
   #   :separator - what to output between the key, operator, and value
   #
   # Examples
@@ -79,7 +79,7 @@ class IniFile
     @default  = opts.fetch(:default, 'global')
     @filename = opts.fetch(:filename, nil)
     @permissions = opts.fetch(:permissions, nil)
-    @slash_lc  = opts.fetch(:slash_lc, true)
+    @continuation  = opts.fetch(:continuation, true)
     @separator = opts.fetch(:separator, ' ')
     content   = opts.fetch(:content, nil)
 
@@ -419,7 +419,7 @@ class IniFile
   #
   # Returns this IniFile.
   def parse( content )
-    parser = Parser.new(@ini, @param, @comment, @default, @slash_lc)
+    parser = Parser.new(@ini, @param, @comment, @default, @continuation)
     parser.parse(content)
     self
   end
@@ -441,12 +441,12 @@ class IniFile
     # param   - String used to separate parameter and value
     # comment - String containing the comment character(s)
     # default - The String name of the default global section
-    # slash_lc - Use backslash as a line continuation character
+    # continuation - Use backslash as a line continuation character
     #
-    def initialize( hash, param, comment, default, slash_lc )
+    def initialize( hash, param, comment, default, continuation )
       @hash = hash
       @default = default
-      @slash_lc = slash_lc
+      @continuation = continuation
 
       comment = comment.to_s.empty? ? "\\z" : "\\s*(?:[#{comment}].*)?\\z"
 
@@ -458,7 +458,7 @@ class IniFile
       @open_quote      = %r/\A\s*(".*)\z/
       @close_quote     = %r/\A(.*(?<!\\)")#{comment}/
       @full_quote      = %r/\A\s*(".*(?<!\\)")#{comment}/
-      if @slash_lc
+      if @continuation
         @trailing_slash = %r/\A(.*)(?<!\\)\\#{comment}/
       else
         @trailing_slash = %r/\A(.*\\)#{comment}/
@@ -508,7 +508,7 @@ class IniFile
 
         when @trailing_slash
           self.value ?  self.value << $1 : self.value = $1
-          continuation = @slash_lc
+          continuation = @continuation
 
         when @normal_value
           self.value ?  self.value << $1 : self.value = $1

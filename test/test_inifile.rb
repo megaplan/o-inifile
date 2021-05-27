@@ -52,7 +52,7 @@ class TestIniFile < Test::Unit::TestCase
     assert_instance_of IniFile, ini_file
 
     # check that backslash line continuation can be ignored by option
-    ini_file = IniFile.load 'test/data/line_continuation.ini', :slash_lc => false
+    ini_file = IniFile.load 'test/data/line_continuation.ini', :continuation => false
     assert_equal ini_file["escaped"]["line_continuation"], "C:\\Temp\\path\\"
 
     # make sure we error out on files with bad lines
