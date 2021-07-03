@@ -194,6 +194,12 @@ Read INI content from a string:
 
     myini = IniFile.new(:content => "[global]\nfoo=bar")
 
+Create and save a new INI file:
+
+    myini = IniFile.new(filename: 'mytest.ini')
+    myini['section'] = {key: 'value'}
+    myini.write
+
 Contributing
 ------------
 
