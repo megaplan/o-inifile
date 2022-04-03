@@ -118,10 +118,10 @@ class IniFile
             f.puts param
           else
             if !val.is_a?(Array) || !@force_array
-              f.puts "#{param}#{@separator}#{@param}#{@separator}\"#{escape_value val}\""
+              f.puts "#{param}#{@separator}#{@param}#{@separator}#{escape_value val}"
             else
               val.each do |subval|
-                f.puts "#{param}#{@separator}#{@param}#{@separator}\"#{escape_value subval}\""
+                f.puts "#{param}#{@separator}#{@param}#{@separator}#{escape_value subval}"
               end
             end
           end
@@ -650,7 +650,7 @@ class IniFile
         elsif stripped_value =~ /^[^0]\d*$/
           Integer(stripped_value)
         else
-          unescape_value(value)
+          "\"#{unescape_value(value)}\""
         end
       end
     rescue
