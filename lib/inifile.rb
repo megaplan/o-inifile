@@ -649,6 +649,8 @@ class IniFile
           Float(stripped_value)
         elsif stripped_value =~ /^[^0]\d*$/
           Integer(stripped_value)
+        elsif stripped_value == "0"
+          Integer(stripped_value)
         else
           "\"#{unescape_value(value)}\""
         end
